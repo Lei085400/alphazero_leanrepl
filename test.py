@@ -18,7 +18,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '1,2'
 
 # device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu') 
 
-model_name_or_path = "/home2/wanglei/Project/model/pythia2.8b_choose"
+model_name_or_path = "/home/wanglei/AAAI/lean_ATG/model/pythia2.8b_choose"
 
 def list_files(directory):
     filelist = []

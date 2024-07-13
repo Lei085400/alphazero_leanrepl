@@ -38,7 +38,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1,2"
 tokenizer1 = AutoTokenizer.from_pretrained("/home/wanglei/AAAI/lean_ATG/leanproject/leandojo-lean4-tacgen-byt5-small")       # Or "lean3" -> "lean4"
 model = AutoModelForSeq2SeqLM.from_pretrained("/home/wanglei/AAAI/lean_ATG/leanproject/leandojo-lean4-tacgen-byt5-small")   # Or "lean3" -> "lean4"
 
-model_name_or_path = "/home2/wanglei/Project/model/pythia2.8b_choose"
+model_name_or_path = "/home/wanglei/AAAI/lean_ATG/model/pythia2.8b_choose"
 
 model = vllm.LLM(
     model=model_name_or_path,
