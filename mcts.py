@@ -35,8 +35,8 @@ MAX_ROUND_NUMBER = 10
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0" 
 
-tokenizer1 = AutoTokenizer.from_pretrained("/home2/wanglei/python_project/leandojo-lean4-tacgen-byt5-small")       # Or "lean3" -> "lean4"
-model = AutoModelForSeq2SeqLM.from_pretrained("/home2/wanglei/python_project/leandojo-lean4-tacgen-byt5-small")   # Or "lean3" -> "lean4"
+tokenizer1 = AutoTokenizer.from_pretrained("/home/wanglei/AAAI/lean_ATG/leanproject/leandojo-lean4-tacgen-byt5-small")       # Or "lean3" -> "lean4"
+model = AutoModelForSeq2SeqLM.from_pretrained("/home/wanglei/AAAI/lean_ATG/leanproject/leandojo-lean4-tacgen-byt5-small")   # Or "lean3" -> "lean4"
 
 model_name_or_path = "/home2/wanglei/Project/model/pythia2.8b_choose"
 
