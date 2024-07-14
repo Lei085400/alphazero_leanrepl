@@ -22,7 +22,9 @@ model_name_or_path = "/home/wanglei/AAAI/lean_ATG/model/pythia2.8b_choose"
 
 def list_files(directory):
     filelist = []
-    for file in os.listdir(directory):
+    for i, file in enumerate(os.listdir(directory)):
+        if(i < 150):
+            continue
         if os.path.isfile(os.path.join(directory, file)):
             print(file)
             filelist.append(file)
@@ -86,7 +88,7 @@ def generate_vllm(prompt, model, tokenizer, temperatures, num_samples, stop, max
     return texts, scores
 
 
-def search(init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
+def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
             max_tokens=255, time_out=360, queue_max_count=int(1e6)):
     queue = [(0.0, [], init_state)]
     visited = set() 
@@ -132,7 +134,9 @@ def search(init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
 
                 if result.isFinish():
                     proof_finished = True
-                    
+                    FF = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/test.txt','a')
+                    FF.write(file +'\n')
+                    FF.close() 
                     print("Theorem has proved!")
                     print(steps+[step])
                     current_time = time.time()
@@ -162,17 +166,17 @@ def search(init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
 
 
 #待证明策略：
-lean_dir = "/home2/wanglei/Project/testfolder/lean_theorems_with_options"
+lean_dir = "/home/wanglei/AAAI/lean_ATG/leanproject/testfolder/lean_theorems_with_options"
 # lean_dir = "/home2/wanglei/Project/testfolder"
 file_list = list_files(lean_dir)
 # print(len(file_list))
-Fi = open(r'/home2/wanglei/Project/alphazero_leanrepl/file_list_test.txt','w')
+Fi = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/file_list_test.txt','w')
 for i in file_list:
     Fi.write(str(i)+'\n')
 Fi.close() 
 
 
-lean_workdir = "/home2/wanglei/Project" # Lean工程的根目录
+lean_workdir = "/home/wanglei/AAAI/lean_ATG/leanproject" # Lean工程的根目录
 for i, file in enumerate(file_list):
     print("============================================")
     lean_file = "testfolder/lean_theorems_with_options/" + file  # 待证明定理的Lean文件
@@ -193,7 +197,7 @@ for i, file in enumerate(file_list):
 
     print("开始搜索策略")
 
-    flag = search(state, lean)
+    flag = search(file, state, lean)
     
     end = timeit.default_timer()
     
@@ -210,7 +214,7 @@ print("成功总数：{}".format(str(count)))
 print("通过比例：{}".format(str(count/len(file_list))))
 # print("成功定理有：")
 # print(succ)
-F = open(r'/home2/wanglei/Project/alphazero_leanrepl/0713.txt','w')
+F = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/output_test.txt','w')
 for i in succ_name:
     F.write(str(i)+'\n')
 F.close() 

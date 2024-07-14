@@ -17,7 +17,6 @@ from torch.nn.parallel import DataParallel
 # from lean_dojo import *
 from model import policy_model
 from model import value_model
-from trainer import Trainer
 from mcts import State
 from mcts import Node
 from mcts import MCTS
@@ -29,7 +28,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForSeq2Se
 
 
 
-device = torch.device('cuda:1') if torch.cuda.is_available() else torch.device('cpu') 
+device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu') 
 
 
 args = {
@@ -79,15 +78,17 @@ print("hello,开始了！！")
 # print ("第一次时间：{}".format(str(end-start)))
 
 
-checkpoint_policy = torch.load("/home2/wanglei/Project/alphazero_leanrepl/policy_model")
+checkpoint_policy = torch.load("/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/policy_model")
 policyModel.load_state_dict(checkpoint_policy['state_dict'])
 
-checkpoint_value = torch.load("/home2/wanglei/Project/alphazero_leanrepl/value_model")
+checkpoint_value = torch.load("/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/value_model")
 valueModel.load_state_dict(checkpoint_value['state_dict'])
 
 def list_files(directory):
     filelist = []
-    for file in os.listdir(directory):
+    for i, file in enumerate(os.listdir(directory)):
+        if(i < 140):
+            continue
         if os.path.isfile(os.path.join(directory, file)):
             print(file)
             filelist.append(file)
@@ -96,31 +97,27 @@ def list_files(directory):
 count = 0
 succ = []
 succ_name = []
+ 
 
 # #待证明策略：
-# lean_dir = "/home2/wanglei/Project/parse/lean_theorems_with_options"
+# lean_dir = "/home/wanglei/AAAI/lean_ATG/leanproject/testfolder/lean_theorems_with_options"
 # # lean_dir = "/home2/wanglei/Project/testfolder"
 # file_list = list_files(lean_dir)
 # # print(len(file_list))
+# Fi = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/file_list.txt','w')
+# for i in file_list:
+#     Fi.write(str(i)+'\n')
+# Fi.close() 
 
-# lean_workdir = "/home2/wanglei/Project" # Lean工程的根目录
-# for file in file_list:
-#     print("============================================")
-#     lean_file = "parse/lean_theorems_with_options" + file  # 待证明定理的Lean文件
-   
+file_list = []
+with open('example.txt', 'r') as file: 
+    lines = file.readlines() 
+    for line in lines:
+        line = ''.join(line).strip('\n')
+        file_list.append(line)
+        print(line)
 
-#待证明策略：
-lean_dir = "/home2/wanglei/Project/testfolder/lean_theorems_with_options"
-# lean_dir = "/home2/wanglei/Project/testfolder"
-file_list = list_files(lean_dir)
-# print(len(file_list))
-Fi = open(r'/home2/wanglei/Project/alphazero_leanrepl/file_list.txt','w')
-for i in file_list:
-    Fi.write(str(i)+'\n')
-Fi.close() 
-
-
-lean_workdir = "/home2/wanglei/Project" # Lean工程的根目录
+lean_workdir = "/home/wanglei/AAAI/lean_ATG/leanproject" # Lean工程的根目录
 for i, file in enumerate(file_list):
     print("============================================")
     lean_file = "testfolder/lean_theorems_with_options/" + file  # 待证明定理的Lean文件
@@ -150,6 +147,9 @@ for i, file in enumerate(file_list):
         count += 1
         # succ.append(state.tacticState)
         succ_name.append(format(file))
+        FF = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/search_test.txt','a')
+        FF.write(file +'\n')
+        FF.close() 
         
     print ("所用时间：{}".format(str(end-start)))
     print("第{}个定理".format(str(i)))
@@ -159,7 +159,7 @@ print("成功总数：{}".format(str(count)))
 print("通过比例：{}".format(str(count/len(file_list))))
 # print("成功定理有：")
 # print(succ)
-F = open(r'/home2/wanglei/Project/alphazero_leanrepl/0713.txt','w')
+F = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/output.txt','w')
 for i in succ_name:
     F.write(str(i)+'\n')
 F.close() 

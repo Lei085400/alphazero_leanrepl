@@ -16,8 +16,8 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForCausa
 # tokenizer = AutoTokenizer.from_pretrained("/home2/wanglei/python_project/leandojo-lean4-tacgen-byt5-small")       # Or "lean3" -> "lean4"
 # model = AutoModelForSeq2SeqLM.from_pretrained("/home2/wanglei/python_project/leandojo-lean4-tacgen-byt5-small")   # Or "lean3" -> "lean4"
 
-tokenizer = AutoTokenizer.from_pretrained("/home2/wanglei/python_project/leandojo-lean4-tacgen-byt5-small")       # Or "lean3" -> "lean4"
-model = AutoModelForSeq2SeqLM.from_pretrained("/home2/wanglei/python_project/leandojo-lean4-tacgen-byt5-small")   # Or "lean3" -> "lean4"
+tokenizer = AutoTokenizer.from_pretrained("/home/wanglei/AAAI/lean_ATG/leanproject/leandojo-lean4-tacgen-byt5-small")       # Or "lean3" -> "lean4"
+model = AutoModelForSeq2SeqLM.from_pretrained("/home/wanglei/AAAI/lean_ATG/leanproject/leandojo-lean4-tacgen-byt5-small")   # Or "lean3" -> "lean4"
 
 
 def encode_state(state, feature_size):

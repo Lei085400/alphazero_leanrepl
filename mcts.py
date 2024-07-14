@@ -117,24 +117,6 @@ def encode_tactic(tactic, feature_size):
         encode_tactic = encode_tactic[:feature_size]
     return encode_tactic
 
-# def tactic_generator(state):
-#     init_state = state.pp
-#     tokenized_state = tokenizer(init_state, return_tensors="pt")
-
-#     # Generate multiple tactics via beam search.
-#     tactic_candidates_ids = model.generate(
-#         tokenized_state.input_ids,
-#         max_length=1024,
-#         num_beams=4,
-#         length_penalty=0.0,
-#         do_sample=False,
-#         num_return_sequences=4,
-#         early_stopping=False,
-#     )
-#     tactic_candidates = tokenizer.batch_decode(
-#         tactic_candidates_ids, skip_special_tokens=True
-#     )
-#     return tactic_candidates
 
 def tactic_generator(state, num_samples=16, max_tokens=255 ):
   # state = state.getTacticState()
@@ -152,44 +134,7 @@ def tactic_generator(state, num_samples=16, max_tokens=255 ):
   # print(tactic_candidates)
   # tactic_candidates = [ 'have choose_eq_choose_sub_add :  choose n k = choose (n - 1 + 1) (k - 1 + 1)  := by rw[Nat.sub_add_cancel h1, Nat.sub_add_cancel h2]',
   #                     'rw[choose_eq_choose_sub_add,add_comm (choose (n - 1) k) (choose (n - 1) (k - 1))]',
-  #                     'have choose_sub_eq_choose_sub_add : choose (n - 1) k = choose (n - 1) (k - 1 + 1) := by rw[Nat.sub_add_cancel h2]',
-  #                     'rw[choose_sub_eq_choose_sub_add, choose_succ_succ]',
-  #                     'simp [*, choose]' ,
-  #                     'rw [add_assoc]',
-  #                     'rw[two_mul]',
-  #                     'simp',
-  #                     'rw[add_comm]',]
-  # tactic_candidates = [ 'have choose_eq_choose_sub_add :  choose n k = choose (n - 1 + 1) (k - 1 + 1)  := by rw[Nat.sub_add_cancel h1, Nat.sub_add_cancel h2]',
-  #                       'rw[choose_eq_choose_sub_add,add_comm (choose (n - 1) k) (choose (n - 1) (k - 1))]',
-  #                       'have choose_sub_eq_choose_sub_add : choose (n - 1) k = choose (n - 1) (k - 1 + 1) := by rw[Nat.sub_add_cancel h2]',
-  #                       'rw[choose_sub_eq_choose_sub_add, choose_succ_succ]',
-  #                       'simp [*, choose]' ,
-  #                       'rw [add_assoc]',
-  #                       'rw[two_mul]',
-  #                       'simp',
-  #                       'rw[add_comm]',
-  #                       'rw[sub_eq_neg_add]',
-  #                       'rw[neg_sub]',
-  #                       'rw[← add_assoc]',
-  #                       'congr 1',
-  #                       'rw[Nat.add_div_of_dvd_left]',
-  #                       'exact two_mod_two_pow hn',
-  #                       'rw[Nat.sub_add_cancel h1]',
-  #                       'rw[sum_range_succ]',
-  #                       'rw[choose_mul]',
-  #                       'rw[Nat.sub_add_cancel h2]',
-  #                       'rw[sum_Ico_eq_sum_range]',
-  #                       'rw[add_mul]',
-  #                       'rw[mul_choose_eq_mul_choose hn]',
-  #                       'rw[range_eq_Ico]',
-  #                       'rw[← add_mul]',
-  #                       'rw[mul_choose_two_pow hn]',
-  #                       'rw [sum_Ico_succ_top hn]',
-  #                       'rw[div_eq_mul_one_div]',
-  #                       'rw[range_sub_choose_add_sum]',
-  #                       'rw[pow_add]',
-  #                       'norm_num',
-  #                     ]
+  
   return tactic_candidates
 
 
@@ -212,36 +157,15 @@ class State(object):
       return None
   
   def proof(self,state,tac,lean):
-      result = lean.run_tactic(state, [tac])
-      # print("当前状态为{}".format(state))
-      # print("策略为{}".format(tac))
-      
-      # if(result.error is not None):  ## 证明失败，terminal = 1 ， reward = -1
-      #     # print("证明失败")
-      #     return -1
-      # else:
-      #   if(result.isFinish()): #证明成功
-      #     return 1
-      #   else:
-      return result
-          # if(result == ProofGivenUp()):
-          #     print(result)
-          #     # print(dojo.is_successful)
-          #     # print("证明放弃，terminal = 1 ， reward = -1")
-          #     return -1
-          # else:
-          #     try:
-          #         if(result.pp is not None):
-          #             # print(result)
-          #             # # print(dojo.is_successful)
-          #             # print("证明未完成，terminal = 0 ， reward = 0")
-          #             return result
-          #     except Exception as ex:
-          #         if(dojo.is_successful == True): ## 证明成功
-          #             # print(result)
-          #             # # print(dojo.is_successful)
-          #             # print("证明成功，terminal = 1 ， reward = 1")
-          #             return 1
+    try:
+        result = lean.run_tactic(state, [tac])
+    except:
+        # print("状态异常")
+        # print(state.tacticState)
+        return state
+
+    return result
+          
 
   def get_next_state_with_random_choice(self,lean,index):  ############# 根据当前state输入大模型，获取策略list后，随机选择其中一个策略，返回执行该随机策略后的状态
     if(self.tactic_candidates is None):
