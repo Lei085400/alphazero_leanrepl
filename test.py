@@ -23,8 +23,6 @@ model_name_or_path = "/home/wanglei/AAAI/lean_ATG/model/pythia2.8b_choose"
 def list_files(directory):
     filelist = []
     for i, file in enumerate(os.listdir(directory)):
-        if(i < 150):
-            continue
         if os.path.isfile(os.path.join(directory, file)):
             print(file)
             filelist.append(file)
@@ -46,6 +44,8 @@ tokenizer = transformers.GPTNeoXTokenizerFast.from_pretrained(model_name_or_path
 # 模型的prompt输入
 def _prompt_proofstep(ts):
     prompt = f"[GOAL]{ts}[PROOFSTEP]"
+    if(len(prompt)>2048):
+      prompt = prompt[:2048]
     return prompt
 
 # 去重排序
@@ -126,7 +126,7 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
         # break
 
         for step, score in zip(step_cands, step_scores):
-            # try:
+            try:
                 result = lean.run_tactic(state, [step])
                 
                 if result.getError() != None:
@@ -134,7 +134,7 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
 
                 if result.isFinish():
                     proof_finished = True
-                    FF = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/test.txt','a')
+                    FF = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/valid_succ.txt','a')
                     FF.write(file +'\n')
                     FF.close() 
                     print("Theorem has proved!")
@@ -148,8 +148,8 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
                         new_score = (total_score - score)
                         heapq.heappush(queue, (new_score, steps+[step], result)) 
 
-            # except (Exception) as ex:
-            #     print(ex)      
+            except (Exception) as ex:
+                print(ex)      
     return proof_finished
         
 
@@ -165,21 +165,30 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
 # # print(statement)
 
 
+
+# file_list = []
+# with open('example.txt', 'r') as file: 
+#     lines = file.readlines() 
+#     for line in lines:
+#         line = ''.join(line).strip('\n')
+#         file_list.append(line)
+#         print(line)
+
 #待证明策略：
-lean_dir = "/home/wanglei/AAAI/lean_ATG/leanproject/testfolder/lean_theorems_with_options"
+lean_dir = "/home/wanglei/AAAI/lean_ATG/leanproject/testfolder/lean_theorems_with_options_valid"
 # lean_dir = "/home2/wanglei/Project/testfolder"
 file_list = list_files(lean_dir)
 # print(len(file_list))
-Fi = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/file_list_test.txt','w')
+Fi = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/file_list_valid.txt','w')
 for i in file_list:
     Fi.write(str(i)+'\n')
 Fi.close() 
 
-
+F0 = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/vaild_record.txt','a')
 lean_workdir = "/home/wanglei/AAAI/lean_ATG/leanproject" # Lean工程的根目录
 for i, file in enumerate(file_list):
     print("============================================")
-    lean_file = "testfolder/lean_theorems_with_options/" + file  # 待证明定理的Lean文件
+    lean_file = "testfolder/lean_theorems_with_options_valid/" + file  # 待证明定理的Lean文件
    
     print("证明定理为:{}".format(file))
     lean = Lean4Gym(lean_workdir, lean_file)
@@ -208,13 +217,19 @@ for i, file in enumerate(file_list):
         
     print ("所用时间：{}".format(str(end-start)))
     print("第{}个定理".format(str(i)))
-    print("已成功证明{}条定理".format(str(count)))
+    print("已成功证明{}条定理".format(str(count))) 
+    F0.write("证明定理为:{}".format(file) +'\n')
+    F0.write("所用时间：{}".format(str(end-start)) +'\n')
+    F0.write("第{}个定理".format(str(i))+'\n')
+    F0.write("已成功证明{}条定理".format(str(count))+'\n')
+    F0.write("===================================="+'\n')
 
+F0.close() 
 print("成功总数：{}".format(str(count)))
 print("通过比例：{}".format(str(count/len(file_list))))
 # print("成功定理有：")
 # print(succ)
-F = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/output_test.txt','w')
+F = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/output_valid.txt','w')
 for i in succ_name:
     F.write(str(i)+'\n')
 F.close() 
