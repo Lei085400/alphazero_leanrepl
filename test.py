@@ -14,7 +14,7 @@ import traceback
 
 import torch
 # os.environ['TOKENIZERS_PARALLELISM'] = 'false'
-os.environ['CUDA_VISIBLE_DEVICES'] = '1,2'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 # device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu') 
 
@@ -137,6 +137,11 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
                     FF = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/valid_succ.txt','a')
                     FF.write(file +'\n')
                     FF.close() 
+                    FF0 = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/valid_succ_step.txt','a')
+                    step_list = steps
+                    step_list.append(step)
+                    FF0.write(steps + [step] +'\n\n')
+                    FF0.close() 
                     print("Theorem has proved!")
                     print(steps+[step])
                     current_time = time.time()
@@ -153,38 +158,25 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
     return proof_finished
         
 
-# lean_workdir = "/home2/wanglei/Project" # Lean工程的根目录
-# lean_file = "demo.lean"   # 待证明定理的Lean文件
-# print("lean_workdir:", lean_workdir)
-# print("lean_file   :", lean_file)
-
-# lean = Lean4Gym(lean_workdir, lean_file)
-# state = lean.getInitState()
-
-# statement = state.getTacticState()
-# # print(statement)
-
-
-
-# file_list = []
-# with open('example.txt', 'r') as file: 
-#     lines = file.readlines() 
-#     for line in lines:
-#         line = ''.join(line).strip('\n')
-#         file_list.append(line)
-#         print(line)
+file_list = []
+with open('example.txt', 'r') as file: 
+    lines = file.readlines() 
+    for line in lines:
+        line = ''.join(line).strip('\n')
+        file_list.append(line)
+        print(line)
 
 #待证明策略：
-lean_dir = "/home/wanglei/AAAI/lean_ATG/leanproject/testfolder/lean_theorems_with_options_valid"
-# lean_dir = "/home2/wanglei/Project/testfolder"
-file_list = list_files(lean_dir)
-# print(len(file_list))
-Fi = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/file_list_valid.txt','w')
-for i in file_list:
-    Fi.write(str(i)+'\n')
-Fi.close() 
+# lean_dir = "/home/wanglei/AAAI/lean_ATG/leanproject/testfolder/test"
+# # lean_dir = "/home2/wanglei/Project/testfolder"
+# file_list = list_files(lean_dir)
+# # print(len(file_list))
+# Fi = open(r'file_list_test.txt','w')
+# for i in file_list:
+#     Fi.write(str(i)+'\n')
+# Fi.close() 
 
-F0 = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/vaild_record.txt','a')
+
 lean_workdir = "/home/wanglei/AAAI/lean_ATG/leanproject" # Lean工程的根目录
 for i, file in enumerate(file_list):
     print("============================================")
@@ -218,13 +210,14 @@ for i, file in enumerate(file_list):
     print ("所用时间：{}".format(str(end-start)))
     print("第{}个定理".format(str(i)))
     print("已成功证明{}条定理".format(str(count))) 
+    F0 = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/vaild_record.txt','a')
     F0.write("证明定理为:{}".format(file) +'\n')
     F0.write("所用时间：{}".format(str(end-start)) +'\n')
     F0.write("第{}个定理".format(str(i))+'\n')
     F0.write("已成功证明{}条定理".format(str(count))+'\n')
     F0.write("===================================="+'\n')
-
-F0.close() 
+    F0.close() 
+    
 print("成功总数：{}".format(str(count)))
 print("通过比例：{}".format(str(count/len(file_list))))
 # print("成功定理有：")

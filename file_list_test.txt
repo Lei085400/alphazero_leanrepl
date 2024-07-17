@@ -1,0 +1,9 @@
+induction_nfactltnexpnm1ngt3.lean
+induction_11div10tonmn1ton.lean
+induction_prod1p1onk3le3m1onn.lean
+induction_sumkexp3eqsumksq.lean
+induction_pord1p1on2powklt5on2.lean
+induction_1pxpownlt1pnx.lean
+imo_1965_p2.lean
+induction_pprime_pdvdapowpma.lean
+induction_12dvd4expnp1p20.lean

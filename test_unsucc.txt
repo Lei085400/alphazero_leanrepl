@@ -44,6 +44,7 @@ mathd_algebra_263.lean
 mathd_numbertheory_541.lean
 amc12b_2020_p22.lean
 mathd_numbertheory_314.lean
+imo_1964_p2.lean
 amc12a_2021_p8.lean
 imo_2001_p6.lean
 mathd_algebra_484.lean
@@ -155,3 +156,12 @@ algebra_sqineq_unitcircatbpabsamblt1.lean
 algebra_sum1onsqrt2to1onsqrt10000lt198.lean
 mathd_algebra_362.lean
 amc12a_2003_p5.lean
+induction_nfactltnexpnm1ngt3.lean
+induction_11div10tonmn1ton.lean
+induction_prod1p1onk3le3m1onn.lean
+induction_sumkexp3eqsumksq.lean
+induction_pord1p1on2powklt5on2.lean
+induction_1pxpownlt1pnx.lean
+imo_1965_p2.lean
+induction_pprime_pdvdapowpma.lean
+induction_12dvd4expnp1p20.lean
