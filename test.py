@@ -9,6 +9,7 @@ from datetime import datetime
 from tqdm import tqdm, trange
 from pathlib import Path
 from Lean4Gym import *
+import copy
 # from lean_dojo import *
 import traceback
 
@@ -134,16 +135,21 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
 
                 if result.isFinish():
                     proof_finished = True
+                    
+                    step_list = copy.copy(steps)
+                    step_list.append(step)
+                    # print(step_list)
+                    # print(steps)
+                    
                     FF = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/valid_succ.txt','a')
                     FF.write(file +'\n')
                     FF.close() 
+                    
                     FF0 = open(r'/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/valid_succ_step.txt','a')
-                    step_list = steps
-                    step_list.append(step)
-                    FF0.write(steps + [step] +'\n\n')
+                    FF0.write(str(step_list) + '\n')
                     FF0.close() 
+                    
                     print("Theorem has proved!")
-                    print(steps+[step])
                     current_time = time.time()
                     print("证明时长为：{}".format(current_time-start))
                     return proof_finished
@@ -159,7 +165,7 @@ def search(file, init_state, lean:Lean4Gym, max_iters=int(1e6), num_samples=16,
         
 
 file_list = []
-with open('example.txt', 'r') as file: 
+with open('/home/wanglei/AAAI/lean_ATG/leanproject/alphazero_leanrepl/example.txt', 'r') as file: 
     lines = file.readlines() 
     for line in lines:
         line = ''.join(line).strip('\n')
@@ -180,7 +186,7 @@ with open('example.txt', 'r') as file:
 lean_workdir = "/home/wanglei/AAAI/lean_ATG/leanproject" # Lean工程的根目录
 for i, file in enumerate(file_list):
     print("============================================")
-    lean_file = "testfolder/lean_theorems_with_options_valid/" + file  # 待证明定理的Lean文件
+    lean_file = "testfolder/lean_theorems_with_options/" + file  # 待证明定理的Lean文件
    
     print("证明定理为:{}".format(file))
     lean = Lean4Gym(lean_workdir, lean_file)
